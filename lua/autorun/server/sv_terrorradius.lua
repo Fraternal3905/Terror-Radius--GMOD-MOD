@@ -1,3 +1,5 @@
+local chaseTheme = CreateConVar("terrorradius_chase_theme", "1x1x1x1", {FCVAR_ARCHIVE, FCVAR_REPLICATED}, "Sets the chase themes for the terror radius.")
+
 local distance = 2000
 local distanceSqr = distance * distance
 

@@ -1,5 +1,5 @@
 local terrorRadiusMusic = "musics/terrorradiusmusic/"
-local chaseTheme = "bluududd"
+local chaseTheme = "1x1x1x1"
 
 local distance = 2000
 local fullChaseDistance = 500 -- 1238
@@ -85,6 +85,7 @@ hook.Add("Think", "TerrorRadiusThinkClient", function()
     local v = GetClosestEnt(plyPos)
     if IsValid(v) and ply:Health() > 0 then
         local dist = v:GetNWVector("ServerPos", Vector(99999, 99999, 99999)):DistToSqr(plyPos)
+        chaseTheme = GetConVar("terrorradius_chase_theme"):GetString()
         if dist <= distanceSq then
             local chaseTheme = chaseTheme
             if v:GetNWString("TerrorRadiusMusic", nil) then
