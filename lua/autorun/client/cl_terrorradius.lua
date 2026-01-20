@@ -7,7 +7,6 @@ local lowHPChase = 0.5
 local chased = false 
 local outro
 local playingLayer
-local introPlayed = false 
 local dontSetTime = true  
 local layers = {}
 

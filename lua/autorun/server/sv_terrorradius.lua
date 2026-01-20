@@ -19,9 +19,6 @@ function GetClosestPlayer(pos)
     return ent
 end
 
-local terrorRadiusMusic = "musics/terrorradiusmusic/"
-local chaseTheme = "classicx"
-
 hook.Add("Think", "TerrorRadiusThink", function()
     if cachedEnts ~= #ents.GetAll() then
         for i, v in pairs(ents.GetAll()) do
