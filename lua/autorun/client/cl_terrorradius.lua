@@ -93,7 +93,6 @@ hook.Add("Think", "TerrorRadiusThinkClient", function()
             end
             local layers = layers[chaseTheme]
             local currentLayer = math.Round((distanceSq - dist) / (distanceSq - fullChaseDistanceSq) * layers)
-            --currentLayer = math.abs(currentLayer - (layers))
             if currentLayer == 0 then
                 currentLayer = 1
             end
@@ -106,7 +105,6 @@ hook.Add("Think", "TerrorRadiusThinkClient", function()
             if ply:Health() <= lowHPChase * ply:GetMaxHealth() and chaseThemeStations[musicName.. "low"] then
                 musicName = musicName.. "low"
             end
-            --print(musicName)
             musicStation = chaseThemeStations[musicName]
             if dist <= fullChaseDistanceSq and not chased then
                 chased = true
@@ -145,7 +143,6 @@ hook.Add("Think", "TerrorRadiusThinkClient", function()
                 musicStation:Play()
             elseif IsValid(musicStation) and musicStation:GetVolume() <= 1 then
                 if chaseThemeStationsMeta[musicStation].IntroPlayed then
-                    --musicStation:SetVolume(1)
                     fadeIn(musicStation)
                 elseif musicStation:GetVolume() < 1 then
                     fadeIn(musicStation)
