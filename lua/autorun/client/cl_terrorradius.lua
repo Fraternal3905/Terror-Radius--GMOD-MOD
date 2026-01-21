@@ -1,9 +1,9 @@
 local terrorRadiusMusic = "musics/terrorradiusmusic/"
 local chaseTheme = "1x1x1x1"
 
-local distance = 2000
-local fullChaseDistance = 500 -- 1238
-local lowHPChase = 0.5
+local distance = GetConVar("terrorradius_distance")
+local fullChaseDistance = GetConVar("terrorradius_full_chase_distance")
+local lowHPChase = GetConVar("terrorradius_low_hp_chase_multiplier")
 local chased = false 
 local outro
 local playingLayer
@@ -86,6 +86,11 @@ hook.Add("Think", "TerrorRadiusThinkClient", function()
     if IsValid(v) and ply:Health() > 0 then
         local dist = v:GetNWVector("ServerPos", Vector(99999, 99999, 99999)):DistToSqr(plyPos)
         chaseTheme = GetConVar("terrorradius_chase_theme"):GetString()
+        distance = GetConVar("terrorradius_distance"):GetFloat()
+        fullChaseDistance = GetConVar("terrorradius_full_chase_distance"):GetFloat()
+        lowHPChase = GetConVar("terrorradius_low_hp_chase_multiplier"):GetFloat()
+        distanceSq = distance * distance
+        fullChaseDistanceSq = fullChaseDistance * fullChaseDistance
         if dist <= distanceSq then
             local chaseTheme = chaseTheme
             if v:GetNWString("TerrorRadiusMusic", nil) then
@@ -176,4 +181,18 @@ hook.Add("Think", "TerrorRadiusThinkClient", function()
             end
         end
     end
+end)
+
+hook.Add( "PopulateToolMenu", "CreateTerrorRadiusConfig", function()
+    spawnmenu.AddToolMenuOption("Utilities", "Terror Radius", "TerrorRadiusSettings", "Settings", "", "", function(panel)
+        panel:NumSlider("Terror Radius Distance", "terrorradius_distance", 100, 5000)
+        panel:NumSlider("Terror Radius Full Chase Distance", "terrorradius_full_chase_distance", 100, 2000)
+        panel:NumSlider("Low HP Chase Multiplier", "terrorradius_low_hp_chase_multiplier", 0.1, 1)    
+
+        local comboBox, label = panel:ComboBox("Chase Theme", "terrorradius_chase_theme")
+        local files, dirs = file.Find("sound/".. terrorRadiusMusic .. "*", "GAME")
+        for i, v in pairs(dirs) do
+            comboBox:AddChoice(v)
+        end
+    end)
 end)
