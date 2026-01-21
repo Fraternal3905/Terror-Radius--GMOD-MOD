@@ -48,8 +48,8 @@ timer.Simple(1, function()
     PrintTable(chaseThemeStations) 
 end)
 
-local distanceSq = distance * distance
-local fullChaseDistanceSq = fullChaseDistance * fullChaseDistance
+local distanceSq = 1
+local fullChaseDistanceSq = 1
 
 function GetClosestEnt(pos)
     local distance = distanceSq
@@ -80,17 +80,19 @@ end
 hook.Add("Think", "TerrorRadiusThinkClient", function()
     local ply = LocalPlayer()
     if not ply:IsValid() then return end
+    
+    chaseTheme = GetConVar("terrorradius_chase_theme"):GetString()
+    distance = GetConVar("terrorradius_distance"):GetFloat()
+    fullChaseDistance = GetConVar("terrorradius_full_chase_distance"):GetFloat()
+    lowHPChase = GetConVar("terrorradius_low_hp_chase_multiplier"):GetFloat()
+    distanceSq = distance * distance
+    fullChaseDistanceSq = fullChaseDistance * fullChaseDistance
+    dontSetTime = GetConVar("terrorradius_dont_set_time"):GetBool()
 
     local plyPos = ply:GetPos()
     local v = GetClosestEnt(plyPos)
     if IsValid(v) and ply:Health() > 0 then
         local dist = v:GetNWVector("ServerPos", Vector(99999, 99999, 99999)):DistToSqr(plyPos)
-        chaseTheme = GetConVar("terrorradius_chase_theme"):GetString()
-        distance = GetConVar("terrorradius_distance"):GetFloat()
-        fullChaseDistance = GetConVar("terrorradius_full_chase_distance"):GetFloat()
-        lowHPChase = GetConVar("terrorradius_low_hp_chase_multiplier"):GetFloat()
-        distanceSq = distance * distance
-        fullChaseDistanceSq = fullChaseDistance * fullChaseDistance
         if dist <= distanceSq then
             local chaseTheme = chaseTheme
             if v:GetNWString("TerrorRadiusMusic", nil) then
@@ -188,6 +190,7 @@ hook.Add( "PopulateToolMenu", "CreateTerrorRadiusConfig", function()
         panel:NumSlider("Terror Radius Distance", "terrorradius_distance", 100, 5000)
         panel:NumSlider("Terror Radius Full Chase Distance", "terrorradius_full_chase_distance", 100, 2000)
         panel:NumSlider("Low HP Chase Multiplier", "terrorradius_low_hp_chase_multiplier", 0.1, 1)    
+        panel:CheckBox("Don't Reset Music Time on Chase", "terrorradius_dont_set_time")
 
         local comboBox, label = panel:ComboBox("Chase Theme", "terrorradius_chase_theme")
         local files, dirs = file.Find("sound/".. terrorRadiusMusic .. "*", "GAME")
